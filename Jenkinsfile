@@ -1,3 +1,7 @@
+#!/usr/bin/env groovy
+
+def gv
+
 pipeline {
     agent any
     tools {
@@ -5,32 +9,34 @@ pipeline {
     }
 
     stages {
-        stage('1-Build jar') {
+        stage("init") {
             steps {
                 script {
-                    echo "Building......."
-                    sh   "mvn package"
+                    gv = load "script.groovy"
                 }
             }
         }
-        stage('2-Build image') {
+        stage("build jar") {
             steps {
-                 script {
-                    echo "Building the docker image..."
-                    withCredentials([usernamePassword(credentialsId: 'DockerHub Auth', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
-                        sh 'docker build -t devdjangoreact/jenkins-app:jva-2.0 .'
-                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                        sh 'docker push devdjangoreact/jenkins-app:jva-2.0'
-                    }
+                script {
+                    gv.buildJar()
                 }
             }
         }
-        stage('3-push') {
+        stage("build image") {
             steps {
-                 script {
-                    'echo "Ok"'
+                script {
+                    gv.buildImage()
                 }
             }
         }
-   }
+        stage("deploy") {
+            steps {
+                script {
+                    gv.deployApp()
+                }
+            }
+        }
+    }
 }
+
