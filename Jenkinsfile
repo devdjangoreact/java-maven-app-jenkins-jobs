@@ -1,5 +1,4 @@
 pipeline {
-    agent {  }
 
     tools {
         maven 'maven-3.9.2'
