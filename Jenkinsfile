@@ -1,5 +1,5 @@
 pipeline {
-
+    agent any
     tools {
         maven 'maven-3.9.2'
     }
@@ -28,7 +28,6 @@ pipeline {
         stage('3-push') {
             steps {
                  script {
-   
                     'echo "Ok"'
                 }
             }
