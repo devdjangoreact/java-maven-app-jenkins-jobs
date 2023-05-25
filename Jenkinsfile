@@ -4,11 +4,10 @@ pipeline {
         maven 'maven-3.9.2'
     }
 
-
     stages {
         stage('1-Build jar') {
             steps {
-                scrypt {
+                script {
                     echo "Building......."
                     sh   "mvn packege"
                 }
@@ -23,7 +22,7 @@ pipeline {
         }
         stage('3-push') {
             steps {
-                 scrypt {
+                 script {
                     echo "Building the docker image..."
                     withCredentials([usernamePassword(credentialsId: 'DockerHub Auth', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
                         sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
