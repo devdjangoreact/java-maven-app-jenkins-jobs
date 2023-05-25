@@ -15,19 +15,21 @@ pipeline {
         }
         stage('2-Build image') {
             steps {
-                echo "Start of Stage Test"
-                echo "Testing......."
-                echo "End of Stage Build"
+                 script {
+                    echo "Building the docker image..."
+                    withCredentials([usernamePassword(credentialsId: 'DockerHub Auth', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
+                        sh 'docker build -t devdjangoreact/jenkins-app:jva-2.0 .'
+                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                        sh 'docker push devdjangoreact/jenkins-app:jva-2.0'
+                    }
+                }
             }
         }
         stage('3-push') {
             steps {
                  script {
-                    echo "Building the docker image..."
-                    withCredentials([usernamePassword(credentialsId: 'DockerHub Auth', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]){
-                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                        sh 'docker push devdjangoreact/jenkins-app:jva-2.0'
-                    }
+   
+                    'echo "Ok"'
                 }
             }
         }
