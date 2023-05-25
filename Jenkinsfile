@@ -9,7 +9,7 @@ pipeline {
             steps {
                 script {
                     echo "Building......."
-                    sh   "mvn packege"
+                    sh   "mvn package"
                 }
             }
         }
